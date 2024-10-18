@@ -1,8 +1,9 @@
+import Link from 'next/link'
 import React from 'react'
 
 const Logo = () => {
     return (
-        <div>Logo</div>
+        <Link href={"/"}>Logo</Link>
     )
 }
 

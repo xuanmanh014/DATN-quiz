@@ -2,7 +2,7 @@ import { getAccessToken } from "@/apis/auth/index.api";
 import axios from "axios";
 
 const Axios_instance = axios.create({
-    baseURL: `http://localhost:3000/api/v1`,
+    baseURL: `http://localhost:8888/api/v1`,
     headers: {
         "content-Type": "application/json",
     },
