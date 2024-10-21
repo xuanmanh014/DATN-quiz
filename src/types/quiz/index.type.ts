@@ -1,6 +1,18 @@
 import { IFile } from "../common/index.type"
 import { ITopic } from "../topic/index.type"
 
+export interface ISegment {
+    startTime: number
+    endTime: number
+    answer: string
+}
+
+export interface IAnswerResponse {
+    isCorrect?: boolean
+    success?: boolean
+    answer?: string
+}
+
 export interface IQuiz {
     _id?: string
     quizName?: string
@@ -9,4 +21,6 @@ export interface IQuiz {
     quizAnswer?: string
     quizType?: string
     quizTopic?: ITopic
+    isSegmented?: boolean
+    segments?: ISegment[]
 }

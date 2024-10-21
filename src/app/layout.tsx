@@ -23,8 +23,10 @@ export default function RootLayout({
                 <Toaster />
                 <AppContextProvider>
                     <LayoutHeader />
-                    <main className="container m-auto py-[50px]">
-                        {children}
+                    <main>
+                        <div className="container m-auto py-[50px] h-full">
+                            {children}
+                        </div>
                     </main>
                     <LayoutFooter />
                 </AppContextProvider>

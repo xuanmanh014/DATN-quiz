@@ -14,4 +14,14 @@ export const QuizApis = {
 
         return response.data || {};
     },
+    checkSegmentAnswer: async (id?: string, segmentIndex?: number, answer?: string) => {
+        const response = await Axios_instance.post(`${url}/${id}/answer-segment`, { segmentIndex, answer });
+
+        return response.data || {};
+    },
+    checkQuizAnswer: async (id?: string, segmentIndex?: number, answer?: string) => {
+        const response = await Axios_instance.post(`${url}/${id}/answer-full`, { answer });
+
+        return response.data || {};
+    },
 }
