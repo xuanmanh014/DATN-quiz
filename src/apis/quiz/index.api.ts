@@ -1,5 +1,4 @@
 import Axios_instance from "../../axios/config";
-import { IQuiz } from "../../types/quiz/index.type";
 
 const url = "/quiz";
 
@@ -19,9 +18,14 @@ export const QuizApis = {
 
         return response.data || {};
     },
-    checkQuizAnswer: async (id?: string, segmentIndex?: number, answer?: string) => {
+    checkQuizAnswer: async (id?: string, answer?: string) => {
         const response = await Axios_instance.post(`${url}/${id}/answer-full`, { answer });
 
         return response.data || {};
+    },
+    getByTopic: async (topic?: string) => {
+        const response = await Axios_instance.get(`${url}/by-topic/${topic}`);
+
+        return response.data || [];
     },
 }

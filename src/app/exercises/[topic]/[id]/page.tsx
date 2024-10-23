@@ -10,7 +10,7 @@ import { FcNext, FcPrevious } from "react-icons/fc";
 import { FaPlay } from "react-icons/fa6";
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaPause } from "react-icons/fa";
 import DoneQuiz from '@/components/pages/exercise/Done';
 
 const ExercisePage = () => {
@@ -21,6 +21,7 @@ const ExercisePage = () => {
     const [answer, setAnswer] = useState("");
     const [segmentIndex, setSegmentIndex] = useState(0);
     const [allAnswerRes, setAllAnswerRes] = useState<IAnswerResponse[]>([]);
+    const [isSegmentPlayed, setIsSegmentPlayed] = useState(false);
 
     useEffect(() => {
         QuizApis.getById(params.id).then(response => {
@@ -70,12 +71,23 @@ const ExercisePage = () => {
         if (audio) {
             audio.currentTime = startTime;
             audio.play();
+            setIsSegmentPlayed(true);
 
             setTimeout(() => {
                 audio.pause();
+                setIsSegmentPlayed(false);
             }, (endTime - startTime) * 1000);
         }
     };
+
+    const pauseSegment = () => {
+        const audio = audioRef.current;
+
+        if (audio) {
+            audio.pause();
+            setIsSegmentPlayed(false);
+        }
+    }
 
     return (
         <div>
@@ -98,9 +110,12 @@ const ExercisePage = () => {
                     </div>
 
                     <div className='flex items-start gap-3 flex-col'>
-                        <Button variant={"outline"} onClick={() => playSegment(quiz?.segments?.[segmentIndex])}>
+                        {!isSegmentPlayed ? <Button variant={"outline"} onClick={() => playSegment(quiz?.segments?.[segmentIndex])}>
                             <FaPlay />
                         </Button>
+                            : <Button variant={"outline"} onClick={pauseSegment}>
+                                <FaPause />
+                            </Button>}
                         <Textarea
                             placeholder="Type your answer here."
                             rows={6}
