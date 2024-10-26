@@ -1,11 +1,11 @@
 import { IQuiz } from "../quiz/index.type"
 
 export interface ITokenDecoded {
-    _id?: string,
-    email?: string,
-    role?: string[],
-    userFullName?: string,
-    phoneNumber?: string,
+    _id?: string
+    email?: string
+    roles?: string[]
+    userFullName?: string
+    phoneNumber?: string
 }
 
 export interface IFile {
@@ -17,6 +17,6 @@ export interface IFile {
 }
 
 export interface IQuizByTopic {
-    topic?: string;
+    topic?: string
     quizzes?: IQuiz[]
 }

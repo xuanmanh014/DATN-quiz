@@ -1,3 +1,5 @@
+"use client";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -6,17 +8,25 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { FC } from "react";
 import { IoIosLogOut } from "react-icons/io";
+import { FaUser } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { RiLockPasswordFill } from "react-icons/ri";
 
 interface IUserServicesProps {
     userFullName?: string
 }
 
 const MenuKeys = {
-    LOGOUT: "logout"
+    LOGOUT: "logout",
+    EDIT_PASSWORD: "/user/edit-password",
+    USER_INFORMATION: "/user/profile",
 }
 
 const UserServices: FC<IUserServicesProps> = ({ userFullName = "" }) => {
+    const router = useRouter();
     const menu = [
+        { key: MenuKeys.EDIT_PASSWORD, label: "Change password", icon: <RiLockPasswordFill className="mr-2 h-4 w-4" /> },
+        { key: MenuKeys.USER_INFORMATION, label: "Account information", icon: <FaUser className="mr-2 h-4 w-4" /> },
         { key: MenuKeys.LOGOUT, label: "Logout", icon: <IoIosLogOut className="mr-2 h-4 w-4" /> },
     ];
 
@@ -26,8 +36,8 @@ const UserServices: FC<IUserServicesProps> = ({ userFullName = "" }) => {
                 localStorage.removeItem("AccessToken");
                 window.location.href = "/";
                 break;
-
             default:
+                router.push(key);
                 break;
         }
     }

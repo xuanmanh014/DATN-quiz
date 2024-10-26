@@ -1,5 +1,6 @@
 import { Separator } from '@/components/ui/separator'
 import { IQuizByTopic } from '@/types/common/index.type'
+import { quizOrQuizzes } from '@/utils/utils'
 import Link from 'next/link'
 import React, { FC } from 'react'
 
@@ -12,10 +13,11 @@ const ExercisesCard: FC<IExercisesCardProps> = ({ exercise }) => {
 
     return (
         <div className='border border-gray-300 px-5 py-3 rounded-lg'>
-            <h3 className='text-[30px] underline text-blue-500'>
-                <Link href={`/exercises/${exerciseKey}`}>
+            <h3 className='text-[30px] text-blue-500 flex items-center gap-2'>
+                <Link href={`/exercises/${exerciseKey}`} className='underline'>
                     {exercise?.topic}
                 </Link>
+                <p className='text-[20px]'>{`(${exercise?.quizzes?.length} ${quizOrQuizzes(Number(exercise?.quizzes?.length))})`}</p>
             </h3>
             <Separator className='my-3' />
 

@@ -4,7 +4,6 @@ import { Separator } from '@/components/ui/separator';
 import { IQuiz } from '@/types/quiz/index.type';
 import Link from 'next/link';
 import React from 'react'
-import { CiSearch } from "react-icons/ci";
 
 const fetchQuizzes = async (topic: string) => {
     const response = await QuizApis.getByTopic(topic);

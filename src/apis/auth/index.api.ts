@@ -1,5 +1,5 @@
 import Axios_instance from "@/axios/config";
-import { IAuthValues } from "@/types/auth/index.type";
+import { IAuthValues, IChangePass } from "@/types/auth/index.type";
 import { ITokenDecoded } from "@/types/common/index.type";
 import { jwtDecode } from "jwt-decode";
 
@@ -21,7 +21,12 @@ export const AuthApis = {
         const response = await Axios_instance.post(`${authUrl}/forgot-password`, values);
 
         return response.data || {};
-    }
+    },
+    changePassword: async (id?: string, values?: IChangePass) => {
+        const response = await Axios_instance.patch(`${authUrl}/${id}/edit-password`, values);
+
+        return response.data || {};
+    },
 }
 
 export const getAccessToken = () => {
