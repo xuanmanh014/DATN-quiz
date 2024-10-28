@@ -9,7 +9,7 @@ interface IExercisesCardProps {
 }
 
 const ExercisesCard: FC<IExercisesCardProps> = ({ exercise }) => {
-    const exerciseKey = exercise?.topic?.toLowerCase().split(" ").join("-")
+    const exerciseKey = exercise?.topic?.toLowerCase().split(" ").join("-");
 
     return (
         <div className='border border-gray-300 px-5 py-3 rounded-lg'>

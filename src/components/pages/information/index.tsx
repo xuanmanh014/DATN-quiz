@@ -1,5 +1,7 @@
-import { convertCamelCase } from '@/utils/utils'
+import { convertCamelCase, isValidDate } from '@/utils/utils'
 import React, { FC } from 'react'
+import dayjs from "dayjs"
+import { DATE_FORMAT } from '@/constant/constants'
 
 interface IInformationProps {
     title?: string
@@ -18,8 +20,8 @@ const Information: FC<IInformationProps> = ({ title = "", dataSource = {} }) => 
                     {keys.map((key, index) => {
                         return (
                             <tr key={index}>
-                                <th className='text-start p-3 border'>{convertCamelCase(dataSource[key] as string)}</th>
-                                <td className='w-[70%] border p-3'>{dataSource[key]}</td>
+                                <th className='text-start p-3 border'>{convertCamelCase(key)}</th>
+                                <td className='w-[70%] border p-3'>{isValidDate(dataSource[key]) ? dayjs(dataSource[key]).format(DATE_FORMAT) : dataSource[key]}</td>
                             </tr>
                         )
                     })}

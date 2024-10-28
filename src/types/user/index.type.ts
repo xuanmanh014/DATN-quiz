@@ -6,4 +6,8 @@ export interface IUser {
     email: string
     password: string
     roles: string[]
+    createdAt: Date
+    updatedAt: Date
+    updatedPasswordAt: Date
+    joinDate: Date
 }

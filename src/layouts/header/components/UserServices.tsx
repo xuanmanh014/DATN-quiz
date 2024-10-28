@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { FC } from "react";
 import { IoIosLogOut } from "react-icons/io";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaHeart } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { RiLockPasswordFill } from "react-icons/ri";
 
@@ -20,13 +20,15 @@ const MenuKeys = {
     LOGOUT: "logout",
     EDIT_PASSWORD: "/user/edit-password",
     USER_INFORMATION: "/user/profile",
+    FAV_LESSIONS: "/user/favourite-lessions",
 }
 
 const UserServices: FC<IUserServicesProps> = ({ userFullName = "" }) => {
     const router = useRouter();
     const menu = [
-        { key: MenuKeys.EDIT_PASSWORD, label: "Change password", icon: <RiLockPasswordFill className="mr-2 h-4 w-4" /> },
+        { key: MenuKeys.FAV_LESSIONS, label: "Favourite lessions", icon: <FaHeart className="mr-2 h-4 w-4" /> },
         { key: MenuKeys.USER_INFORMATION, label: "Account information", icon: <FaUser className="mr-2 h-4 w-4" /> },
+        { key: MenuKeys.EDIT_PASSWORD, label: "Change password", icon: <RiLockPasswordFill className="mr-2 h-4 w-4" /> },
         { key: MenuKeys.LOGOUT, label: "Logout", icon: <IoIosLogOut className="mr-2 h-4 w-4" /> },
     ];
 

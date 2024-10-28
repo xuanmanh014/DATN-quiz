@@ -7,7 +7,7 @@ export const quizOrQuizzes = (length: number) => {
 
 export function convertCamelCase(str: string) {
     const spacedString = str.replace(/([A-Z])/g, ' $1');
-    return spacedString.charAt(0).toUpperCase() + spacedString.slice(1);
+    return spacedString.charAt(0).toUpperCase() + spacedString.slice(1).toLowerCase();
 }
 
 export function mapUserInformations(user: IUser) {
@@ -16,5 +16,11 @@ export function mapUserInformations(user: IUser) {
         firstName: user.firstName,
         lastName: user.lastName,
         phoneNumber: user.phoneNumber,
+        joinDate: user.createdAt,
     } as IUser
+}
+
+export function isValidDate(dateString: string): boolean {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
 }
