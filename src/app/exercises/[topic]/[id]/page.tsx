@@ -101,6 +101,18 @@ const ExercisePage = () => {
         }
     }
 
+    const handleSetAnswer = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setAnswer(event.target.value);
+    }
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            console.log("aaa")
+            handleSubmitAnswer();
+        }
+    };
+
     return (
         <div>
             <div className="flex items-center justify-between">
@@ -132,8 +144,9 @@ const ExercisePage = () => {
                     placeholder="Type your answer here."
                     rows={6}
                     value={answer}
-                    onChange={(e) => setAnswer(e.target.value)}
+                    onChange={handleSetAnswer}
                     disabled={allAnswerRes?.[segmentIndex]?.isCorrect}
+                    onKeyDown={handleKeyPress}
                 />
                 {!allAnswerRes?.[segmentIndex]?.isCorrect ? <Button onClick={handleSubmitAnswer}>Submit Answer</Button> : <div className='flex items-center gap-3'>
                     <Button onClick={() => {
