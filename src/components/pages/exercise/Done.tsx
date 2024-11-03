@@ -15,7 +15,7 @@ const DoneQuiz = () => {
                 good job!</h2>
             <FaCircleCheck className='text-[80px] text-green-600' />
             <div className="flex items-center gap-3">
-                <Button>Next exercise</Button>
+                <Button onClick={() => router.push("/exercises/short-stories")}>Next exercise</Button>
                 <Button variant={"outline"} onClick={() => router.back()}>Repeat this exercise</Button>
             </div>
 

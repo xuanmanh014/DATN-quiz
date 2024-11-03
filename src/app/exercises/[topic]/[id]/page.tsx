@@ -40,11 +40,7 @@ const ExercisePage = () => {
         }
 
         QuizApis.checkSegmentAnswer(params.id, segmentIndex, answer).then((response) => {
-            if (response?.success) {
-                setAllAnswerRes(prev => [...prev, { ...response, answer }]);
-            } else {
-                openNotiError("Answer", "Your answer is incorrect!");
-            }
+            setAllAnswerRes(prev => [...prev, { ...response, answer }]);
         }).catch((error) => {
             const { response } = error;
             openNotiError("Answer", response?.data?.message);
@@ -108,10 +104,43 @@ const ExercisePage = () => {
     const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            console.log("aaa")
             handleSubmitAnswer();
         }
     };
+
+    const handleDoneQuiz = () => {
+        if (allAnswerRes.length === quiz?.segments?.length) {
+            router.push("/done-quiz");
+        } else {
+            handleNextSegment();
+        }
+    }
+
+    const renderAnswerChecking = (resAnswer: IAnswerResponse) => {
+        if (resAnswer?.isCorrect) {
+            return (
+                <div className='text-green-500 text-[20px] font-bold flex items-center gap-3'>
+                    <FaCheck />
+                    <p>You're correct!</p>
+                </div>
+            )
+        }
+
+        return (
+            <div className="flex items-center gap-4">
+                <Button
+                    variant={"secondary"}
+                    onClick={handleDoneQuiz}
+                >
+                    Skip
+                </Button>
+                <div className='text-red-500 text-[20px] font-bold flex items-center gap-3'>
+                    <FaCheck />
+                    <p>Your answer is wrong, please try again or skip this part!</p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div>
@@ -148,19 +177,12 @@ const ExercisePage = () => {
                     disabled={allAnswerRes?.[segmentIndex]?.isCorrect}
                     onKeyDown={handleKeyPress}
                 />
-                {!allAnswerRes?.[segmentIndex]?.isCorrect ? <Button onClick={handleSubmitAnswer}>Submit Answer</Button> : <div className='flex items-center gap-3'>
-                    <Button onClick={() => {
-                        if (allAnswerRes.length === quiz?.segments?.length) {
-                            router.push("/done-quiz");
-                        } else {
-                            handleNextSegment();
-                        }
-                    }}>Next</Button>
-                    <div className='text-green-500 text-[20px] font-bold flex items-center gap-3'>
-                        <FaCheck />
-                        <p>You're correct!</p>
-                    </div>
-                </div>}
+                <div className="flex items-center gap-4">
+                    {!allAnswerRes?.[segmentIndex]?.isCorrect ? <Button onClick={handleSubmitAnswer}>Submit Answer</Button> : <div className='flex items-center gap-3'>
+                        <Button onClick={handleDoneQuiz}>Next</Button>
+                    </div>}
+                    {allAnswerRes.length > 0 && renderAnswerChecking(allAnswerRes?.[segmentIndex])}
+                </div>
             </div>
         </div>
     )
