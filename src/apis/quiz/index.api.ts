@@ -1,10 +1,11 @@
+import { IGetDto } from "@/types/common/index.type";
 import Axios_instance from "../../axios/config";
 
 const url = "/quiz";
 
 export const QuizApis = {
-    getAll: async () => {
-        const response = await Axios_instance.get(url);
+    getAll: async (query?: IGetDto) => {
+        const response = await Axios_instance.get(url, { params: query });
 
         return response.data || [];
     },
@@ -23,9 +24,9 @@ export const QuizApis = {
 
         return response.data || {};
     },
-    getByTopic: async (topic?: string) => {
-        const response = await Axios_instance.get(`${url}/by-topic/${topic}`);
+    getByTopic: async (topic?: string, query?: IGetDto) => {
+        const response = await Axios_instance.get(`${url}/by-topic/${topic}`, { params: query });
 
-        return response.data || [];
+        return response.data.data || [];
     },
 }

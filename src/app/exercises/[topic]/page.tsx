@@ -1,25 +1,51 @@
+"use client";
+
 import { QuizApis } from '@/apis/quiz/index.api';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { IGetDto } from '@/types/common/index.type';
 import { IQuiz } from '@/types/quiz/index.type';
+import { convertKebabToTitle } from '@/utils/utils';
 import Link from 'next/link';
-import React from 'react'
+import { useSearchParams, useRouter, useParams, usePathname } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
+import { useDebounceCallback } from "usehooks-ts"
 
-const fetchQuizzes = async (topic: string) => {
-    const response = await QuizApis.getByTopic(topic);
+const ExercisesByTopicPage = () => {
+    const [quizzes, setQuizzes] = useState<IQuiz[]>([]);
+    const searchParams = useSearchParams();
+    const search = searchParams.get("search");
+    const { topic } = useParams();
+    const query = { search } as IGetDto;
+    const router = useRouter();
+    const pathname = usePathname();
 
-    return response.data || [];
-}
+    const fetchData = () => {
+        QuizApis.getByTopic(topic as string, query).then(response => {
+            setQuizzes(response?.data);
+        })
+    }
 
-const ExercisesByTopicPage = async ({ params }: { params: { topic: string } }) => {
-    const { topic } = params;
-    const quizzes: IQuiz[] = await fetchQuizzes(topic);
+    useEffect(() => {
+        fetchData();
+    }, [search]);
+
+    const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        if (value) {
+            router.push(`${pathname}?search=${value}`);
+        } else {
+            router.push(pathname);
+        }
+    }
+
+    const debounced = useDebounceCallback(onSearchChange, 500);
 
     return (
         <div>
             <div className="flex items-center justify-between">
-                <h1 className='text-[30px] font-bold'>{quizzes[0].quizTopic?.topicName}</h1>
-                <Input className='w-[500px]' placeholder='Search quiz here' />
+                <h1 className='text-[30px] font-bold'>{convertKebabToTitle(topic as string)}</h1>
+                <Input className='w-[500px]' placeholder='Search quiz here' defaultValue={search as string} onChange={event => debounced(event)} />
             </div>
             <Separator className='my-10' />
 

@@ -24,3 +24,12 @@ export function isValidDate(dateString: string): boolean {
     const date = new Date(dateString);
     return !isNaN(date.getTime());
 }
+
+export function convertKebabToTitle(text: string): string {
+    return text
+        .split('-')
+        .map(word => {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        })
+        .join(' ');
+}

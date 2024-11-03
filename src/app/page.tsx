@@ -12,7 +12,7 @@ import { IQuizByTopic } from "@/types/common/index.type";
 const fetchQuizzes = async () => {
     const response = await QuizApis.getAll();
 
-    return response.data || [];
+    return response.data.data || [];
 }
 
 export default async function Home() {

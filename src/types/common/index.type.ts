@@ -20,3 +20,11 @@ export interface IQuizByTopic {
     topic?: string
     quizzes?: IQuiz[]
 }
+
+export interface IGetDto {
+    search?: string;
+    sortBy?: string;
+    order?: 'asc' | 'desc';
+    page?: number;
+    limit?: number;
+}

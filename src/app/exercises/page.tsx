@@ -8,7 +8,7 @@ import React from 'react'
 const fetchQuizzes = async () => {
     const response = await QuizApis.getAll();
 
-    return response.data || [];
+    return response.data.data || [];
 }
 
 const ExercisesPage = async () => {
