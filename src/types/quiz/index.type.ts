@@ -11,6 +11,7 @@ export interface IAnswerResponse {
     isCorrect?: boolean
     success?: boolean
     answer?: string
+    isSkip?: boolean
 }
 
 export interface IQuiz {

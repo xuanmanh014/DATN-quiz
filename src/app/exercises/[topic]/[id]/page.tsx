@@ -23,6 +23,7 @@ const ExercisePage = () => {
     const [allAnswerRes, setAllAnswerRes] = useState<IAnswerResponse[]>([]);
     const [isSegmentPlayed, setIsSegmentPlayed] = useState(false);
     const router = useRouter();
+    const quizSegments = quiz?.segments;
 
     useEffect(() => {
         QuizApis.getById(params.id).then(response => {
@@ -109,34 +110,59 @@ const ExercisePage = () => {
     };
 
     const handleDoneQuiz = () => {
-        if (allAnswerRes.length === quiz?.segments?.length) {
+        if (allAnswerRes.length === quizSegments?.length) {
             router.push("/done-quiz");
         } else {
             handleNextSegment();
         }
     }
 
+    const handleSkipSegment = () => {
+        setAllAnswerRes(prev => {
+            const data = {
+                isCorrect: true,
+                isSkip: true,
+                answer: quizSegments?.[segmentIndex].answer,
+                success: true,
+            }
+
+            Object.assign(prev?.[segmentIndex], data);
+
+            return prev;
+        });
+        setAnswer(quizSegments?.[segmentIndex].answer || "");
+    }
+
     const renderAnswerChecking = (resAnswer: IAnswerResponse) => {
         if (resAnswer?.isCorrect) {
             return (
                 <div className='text-green-500 text-[20px] font-bold flex items-center gap-3'>
-                    <FaCheck />
-                    <p>You're correct!</p>
+                    <div className='flex items-center gap-3'>
+                        <Button onClick={handleDoneQuiz}>Next</Button>
+                    </div>
+                    {!resAnswer.isSkip && <>
+                        <FaCheck />
+                        <p>You're correct!</p>
+                    </>}
                 </div>
             )
         }
 
         return (
-            <div className="flex items-center gap-4">
-                <Button
-                    variant={"secondary"}
-                    onClick={handleDoneQuiz}
-                >
-                    Skip
-                </Button>
-                <div className='text-red-500 text-[20px] font-bold flex items-center gap-3'>
-                    <FaCheck />
-                    <p>Your answer is wrong, please try again or skip this part!</p>
+            <div>
+                <div className="flex items-center gap-4">
+                    <Button
+                        variant={"secondary"}
+                        onClick={handleSkipSegment}
+                    >
+                        Skip
+                    </Button>
+                    <p className='text-red-500 text-[20px] font-bold '>Your answer is wrong, please try again or skip this part!</p>
+                </div>
+
+                <div className='mt-4 text-[20px]'>
+                    <p>Correct answer:</p>
+                    <p>{quizSegments?.[segmentIndex].answer}</p>
                 </div>
             </div>
         )
@@ -156,32 +182,33 @@ const ExercisePage = () => {
                 <Button variant={"outline"} onClick={handlePrevSegment} disabled={segmentIndex === 0}>
                     <FcPrevious className='cursor-pointer' />
                 </Button>
-                {segmentIndex + 1} / {quiz?.segments?.length}
-                <Button variant={"outline"} onClick={handleNextSegment} disabled={segmentIndex === Number(quiz?.segments?.length) - 1}>
+                {segmentIndex + 1} / {quizSegments?.length}
+                <Button variant={"outline"} onClick={handleNextSegment} disabled={segmentIndex === Number(quizSegments?.length) - 1}>
                     <FcNext className='cursor-pointer' />
                 </Button>
             </div>
 
             <div className='flex items-start gap-3 flex-col'>
-                {!isSegmentPlayed ? <Button variant={"outline"} onClick={() => playSegment(quiz?.segments?.[segmentIndex])}>
-                    <FaPlay />
-                </Button>
+                {!isSegmentPlayed
+                    ? <Button variant={"outline"} onClick={() => playSegment(quizSegments?.[segmentIndex] as ISegment)}>
+                        <FaPlay />
+                    </Button>
                     : <Button variant={"outline"} onClick={pauseSegment}>
                         <FaPause />
                     </Button>}
+
                 <Textarea
-                    placeholder="Type your answer here."
                     rows={6}
                     value={answer}
                     onChange={handleSetAnswer}
-                    disabled={allAnswerRes?.[segmentIndex]?.isCorrect}
                     onKeyDown={handleKeyPress}
+                    placeholder="Type your answer here."
                 />
+
                 <div className="flex items-center gap-4">
-                    {!allAnswerRes?.[segmentIndex]?.isCorrect ? <Button onClick={handleSubmitAnswer}>Submit Answer</Button> : <div className='flex items-center gap-3'>
-                        <Button onClick={handleDoneQuiz}>Next</Button>
-                    </div>}
-                    {allAnswerRes.length > 0 && renderAnswerChecking(allAnswerRes?.[segmentIndex])}
+                    {!allAnswerRes?.[segmentIndex]?.answer && <Button onClick={handleSubmitAnswer}>Check</Button>}
+
+                    {allAnswerRes.length >= (segmentIndex + 1) && renderAnswerChecking(allAnswerRes?.[segmentIndex])}
                 </div>
             </div>
         </div>
