@@ -25,7 +25,7 @@ const profileSchema = z.object({
 });
 
 interface IEditProfileForm {
-    user: IUser
+    user?: IUser
     refetchData: () => void
 }
 
@@ -35,9 +35,9 @@ const EditProfileForm: FC<IEditProfileForm> = ({ user, refetchData = () => { } }
         {
             resolver: zodResolver(profileSchema),
             defaultValues: {
-                firstName: user.firstName || "",
-                lastName: user.lastName || "",
-                phoneNumber: user.phoneNumber || "",
+                firstName: user?.firstName || "",
+                lastName: user?.lastName || "",
+                phoneNumber: user?.phoneNumber || "",
             },
         }
     );
