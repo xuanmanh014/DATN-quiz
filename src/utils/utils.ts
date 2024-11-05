@@ -33,3 +33,14 @@ export function convertKebabToTitle(text: string): string {
         })
         .join(' ');
 }
+
+export function minuteOrMinutes(minute: number) {
+    if (minute > 0) return "minutes";
+    return "minute";
+}
+
+export function millisecondsToMinutes(milliseconds: number, hasText?: boolean): string {
+    const value = milliseconds / 60000;
+
+    return `${value.toFixed(0)} ${hasText ? minuteOrMinutes(value) : ""}`;
+}

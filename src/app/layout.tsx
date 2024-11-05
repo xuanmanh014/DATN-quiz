@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { Toaster } from "@/components/ui/toaster"
 import AppContextProvider from "@/contexts/app";
 import LayoutFooter from "@/layouts/footer";
+import OnlineTracker from "@/components/pages/web-socket/OnlineTracker";
 
 export const metadata: Metadata = {
     title: "Quiz",
@@ -30,6 +31,7 @@ export default function RootLayout({
                     </main>
                     <LayoutFooter />
                 </AppContextProvider>
+                <OnlineTracker />
             </body>
         </html>
     );

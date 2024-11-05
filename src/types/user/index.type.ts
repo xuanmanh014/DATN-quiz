@@ -11,3 +11,9 @@ export interface IUser {
     updatedPasswordAt: Date
     joinDate: Date
 }
+
+export interface IProfileUpdate {
+    firstName?: string
+    lastName?: string
+    phoneNumber?: string
+}

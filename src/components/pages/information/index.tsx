@@ -6,14 +6,18 @@ import { DATE_FORMAT } from '@/constant/constants'
 interface IInformationProps {
     title?: string
     dataSource?: Record<string, any>
+    extra?: React.ReactNode
 }
 
-const Information: FC<IInformationProps> = ({ title = "", dataSource = {} }) => {
+const Information: FC<IInformationProps> = ({ title = "", dataSource = {}, extra = <></> }) => {
     const keys = Object.keys(dataSource) as Array<keyof Record<string, any>>;
 
     return (
         <>
-            <h1 className='text-[30px] font-medium mb-4'>{title}</h1>
+            <div className="flex items-center justify-between">
+                <h2 className='text-[30px] font-medium mb-4'>{title}</h2>
+                {extra}
+            </div>
 
             <table className='border-collapse border border-gray-300 w-full'>
                 <tbody>

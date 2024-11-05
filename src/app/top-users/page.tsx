@@ -1,17 +1,18 @@
-import { UserApis } from '@/apis/user/index.api';
+import { OnlineTimeApis } from '@/apis/online-time/index.api';
 import { Separator } from '@/components/ui/separator'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { IUser } from '@/types/user/index.type';
+import { ISession } from '@/types/session/index.type';
+import { millisecondsToMinutes } from '@/utils/utils';
 import React from 'react'
 
-const fetchUsers = async () => {
-    const response = await UserApis.getAll();
+const fetchOnlineUser = async () => {
+    const response = await OnlineTimeApis.getAllOnlineUser();
 
     return response.data || [];
 }
 
 const TopUsersPage = async () => {
-    const users: IUser[] = await fetchUsers();
+    const users: ISession[] = await fetchOnlineUser();
 
     return (
         <div className='grid grid-cols-2 gap-10'>
@@ -24,6 +25,7 @@ const TopUsersPage = async () => {
                             <TableHead className="w-[100px]">#</TableHead>
                             <TableHead>User's name</TableHead>
                             <TableHead>Email</TableHead>
+                            <TableHead>Online time</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -31,8 +33,9 @@ const TopUsersPage = async () => {
                             return (
                                 <TableRow key={user._id}>
                                     <TableCell className="font-medium">{index + 1}</TableCell>
-                                    <TableCell>{user.firstName} {user.lastName}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
+                                    <TableCell>{user.userId?.firstName} {user.userId?.lastName}</TableCell>
+                                    <TableCell>{user.userId?.email}</TableCell>
+                                    <TableCell>{millisecondsToMinutes(user.duration || 0, true)}</TableCell>
                                 </TableRow>
                             )
                         })}
@@ -48,6 +51,7 @@ const TopUsersPage = async () => {
                             <TableHead className="w-[100px]">#</TableHead>
                             <TableHead>User's name</TableHead>
                             <TableHead>Email</TableHead>
+                            <TableHead>Online time</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -55,8 +59,9 @@ const TopUsersPage = async () => {
                             return (
                                 <TableRow key={user._id}>
                                     <TableCell className="font-medium">{index + 1}</TableCell>
-                                    <TableCell>{user.firstName} {user.lastName}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
+                                    <TableCell>{user.userId?.firstName} {user.userId?.lastName}</TableCell>
+                                    <TableCell>{user.userId?.email}</TableCell>
+                                    <TableCell>{millisecondsToMinutes(user.duration || 0, true)}</TableCell>
                                 </TableRow>
                             )
                         })}

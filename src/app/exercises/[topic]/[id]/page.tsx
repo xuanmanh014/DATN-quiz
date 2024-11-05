@@ -142,7 +142,7 @@ const ExercisePage = () => {
                     </div>
                     {!resAnswer.isSkip && <>
                         <FaCheck />
-                        <p>You're correct!</p>
+                        <p>Correct!</p>
                     </>}
                 </div>
             )
@@ -157,7 +157,7 @@ const ExercisePage = () => {
                     >
                         Skip
                     </Button>
-                    <p className='text-red-500 text-[20px] font-bold '>Your answer is wrong, please try again or skip this part!</p>
+                    <p className='text-red-500 text-[20px] font-bold '>Incorrect!</p>
                 </div>
 
                 <div className='mt-4 text-[20px]'>
@@ -198,11 +198,12 @@ const ExercisePage = () => {
                     </Button>}
 
                 <Textarea
-                    rows={6}
+                    rows={4}
                     value={answer}
                     onChange={handleSetAnswer}
                     onKeyDown={handleKeyPress}
                     placeholder="Type your answer here."
+                    className='w-[400px]'
                 />
 
                 <div className="flex items-center gap-4">
