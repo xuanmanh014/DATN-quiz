@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { FaCheck, FaPause } from "react-icons/fa";
 import MoreActions from './components/MoreActions';
+import QuizComments from './components/Comments';
 
 const ExercisePage = () => {
     const params = useParams<{ id: string }>();
@@ -175,41 +176,49 @@ const ExercisePage = () => {
                 <MoreActions />
             </div>
             <Separator className='my-4' />
-            <audio ref={audioRef} src={quiz?.quizRecord?.filePath} controls></audio>
+            <div className="grid grid-cols-4">
+                <div className="col-span-2">
+                    <audio ref={audioRef} src={quiz?.quizRecord?.filePath} controls></audio>
 
-            <div className="my-4"></div>
-            <div className="flex items-center gap-2 my-[30px]">
-                <Button variant={"outline"} onClick={handlePrevSegment} disabled={segmentIndex === 0}>
-                    <FcPrevious className='cursor-pointer' />
-                </Button>
-                {segmentIndex + 1} / {quizSegments?.length}
-                <Button variant={"outline"} onClick={handleNextSegment} disabled={segmentIndex === Number(quizSegments?.length) - 1}>
-                    <FcNext className='cursor-pointer' />
-                </Button>
-            </div>
+                    <div className="my-4"></div>
+                    <div className="flex items-center gap-2 my-[30px]">
+                        <Button variant={"outline"} onClick={handlePrevSegment} disabled={segmentIndex === 0}>
+                            <FcPrevious className='cursor-pointer' />
+                        </Button>
+                        {segmentIndex + 1} / {quizSegments?.length}
+                        <Button variant={"outline"} onClick={handleNextSegment} disabled={segmentIndex === Number(quizSegments?.length) - 1}>
+                            <FcNext className='cursor-pointer' />
+                        </Button>
+                    </div>
 
-            <div className='flex items-start gap-3 flex-col'>
-                {!isSegmentPlayed
-                    ? <Button variant={"outline"} onClick={() => playSegment(quizSegments?.[segmentIndex] as ISegment)}>
-                        <FaPlay />
-                    </Button>
-                    : <Button variant={"outline"} onClick={pauseSegment}>
-                        <FaPause />
-                    </Button>}
+                    <div className='flex items-start gap-3 flex-col'>
+                        {!isSegmentPlayed
+                            ? <Button variant={"outline"} onClick={() => playSegment(quizSegments?.[segmentIndex] as ISegment)}>
+                                <FaPlay />
+                            </Button>
+                            : <Button variant={"outline"} onClick={pauseSegment}>
+                                <FaPause />
+                            </Button>}
 
-                <Textarea
-                    rows={4}
-                    value={answer}
-                    onChange={handleSetAnswer}
-                    onKeyDown={handleKeyPress}
-                    placeholder="Type your answer here."
-                    className='w-[400px]'
-                />
+                        <Textarea
+                            rows={4}
+                            value={answer}
+                            onChange={handleSetAnswer}
+                            onKeyDown={handleKeyPress}
+                            placeholder="Type your answer here."
+                            className='w-[400px]'
+                        />
 
-                <div className="flex items-center gap-4">
-                    {!allAnswerRes?.[segmentIndex]?.answer && <Button onClick={handleSubmitAnswer}>Check</Button>}
+                        <div className="flex items-center gap-4">
+                            {!allAnswerRes?.[segmentIndex]?.answer && <Button onClick={handleSubmitAnswer}>Check</Button>}
 
-                    {allAnswerRes.length >= (segmentIndex + 1) && renderAnswerChecking(allAnswerRes?.[segmentIndex])}
+                            {allAnswerRes.length >= (segmentIndex + 1) && renderAnswerChecking(allAnswerRes?.[segmentIndex])}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="col-span-2">
+                    <QuizComments />
                 </div>
             </div>
         </div>

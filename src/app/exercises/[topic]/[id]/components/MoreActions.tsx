@@ -8,6 +8,7 @@ import { FavQuizApis } from '@/apis/fav-quizzes/index.api';
 import { getMe } from '@/apis/auth/index.api';
 import { IFavQuiz } from '@/types/fav-quizzes/index.type';
 import { IoSettingsOutline } from "react-icons/io5";
+import { useAppContext } from '@/contexts/app';
 
 const MoreActions = ({ }) => {
     const tokenDecoded = getMe();
@@ -17,6 +18,7 @@ const MoreActions = ({ }) => {
         { label: favQuiz?._id ? "Remove from favourite lession list" : "Add to favourite lession list", key: favQuiz?._id ? "removeFavLession" : "addFavLession", icon: favQuiz?._id ? <FaHeart /> : <FiHeart /> },
         { label: "Settings", key: "settings", icon: <IoSettingsOutline /> },
     ];
+    const { openNotiSuccess, openNotiError } = useAppContext();
 
     useEffect(() => {
         FavQuizApis.getByQuizId(params.id).then(response => {
@@ -28,12 +30,20 @@ const MoreActions = ({ }) => {
         const data = { user: tokenDecoded?._id, quiz: params.id } as IFavQuiz;
         FavQuizApis.addFavQuiz(data).then(response => {
             setIsFavQuiz(response.data);
+            openNotiSuccess("Add favourite quiz");
+        }).catch(error => {
+            const { response } = error;
+            openNotiError("Add favourite quiz", response?.data?.message);
         });
     }
 
     const handleRemoveFavQuiz = () => {
         FavQuizApis.removeFavQuiz(favQuiz?._id).then(() => {
             setIsFavQuiz({});
+            openNotiSuccess("Remove favourite quiz");
+        }).catch(error => {
+            const { response } = error;
+            openNotiError("Remove favourite quiz", response?.data?.message);
         });
     }
 
