@@ -11,21 +11,23 @@ const OnlineTracker = () => {
     const tokenDecoded = getMe();
 
     useEffect(() => {
-        socket = io(SOCKET_URL, {
-            query: { userId: tokenDecoded?._id },
-        });
+        if (tokenDecoded) {
+            socket = io(SOCKET_URL, {
+                query: { userId: tokenDecoded?._id },
+            });
 
-        socket.on('connect', () => {
-            console.log('Connected to server');
-        });
+            socket.on('connect', () => {
+                console.log('Connected to server');
+            });
 
-        socket.on('disconnect', () => {
-            console.log('Disconnected from server');
-        });
+            socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+            });
 
-        return () => {
-            socket.disconnect();
-        };
+            return () => {
+                socket.disconnect();
+            };
+        }
     }, [tokenDecoded]);
 
     return <></>;

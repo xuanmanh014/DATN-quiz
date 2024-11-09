@@ -1,11 +1,11 @@
 import Axios_instance from "../../axios/config";
-import { IQuizComments } from "@/types/quiz-comments/index.type";
+import { IGetQuizParams, IQuizComments } from "@/types/quiz-comments/index.type";
 
 const url = "/quiz-comments";
 
 export const QuizCommentsApis = {
-    getByQuiz: async (quizId?: string) => {
-        const response = await Axios_instance.get(`${url}/by-quiz/${quizId}`);
+    getByQuiz: async (params?: IGetQuizParams) => {
+        const response = await Axios_instance.post(`${url}/by-quiz-and-segment`, params);
 
         return response.data || [];
     },

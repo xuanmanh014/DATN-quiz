@@ -218,7 +218,7 @@ const ExercisePage = () => {
                 </div>
 
                 <div className="col-span-2">
-                    <QuizComments />
+                    <QuizComments segmentIndex={segmentIndex} />
                 </div>
             </div>
         </div>

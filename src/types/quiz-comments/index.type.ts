@@ -8,4 +8,10 @@ export interface IQuizComments {
     comment?: string;
     commentDate?: Date;
     updatedAt?: Date;
+    quizSegmentIndex?: number;
+}
+
+export interface IGetQuizParams {
+    quizId: string;
+    quizSegmentIndex: number;
 }
