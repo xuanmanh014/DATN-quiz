@@ -9,8 +9,14 @@ import { getMe } from '@/apis/auth/index.api';
 import { IFavQuiz } from '@/types/fav-quizzes/index.type';
 import { IoSettingsOutline } from "react-icons/io5";
 import { useAppContext } from '@/contexts/app';
+import SettingDialog from '@/components/pages/setting/Dialog';
+import { useAppSelector } from '@/redux/store';
 
-const MoreActions = ({ }) => {
+interface IplaySegmentProps {
+    playSegment: () => void
+}
+
+const MoreActions: FC<IplaySegmentProps> = ({ playSegment = () => { } }) => {
     const tokenDecoded = getMe();
     const params = useParams<{ id: string }>();
     const [favQuiz, setIsFavQuiz] = useState<IFavQuiz>();
@@ -19,12 +25,33 @@ const MoreActions = ({ }) => {
         { label: "Settings", key: "settings", icon: <IoSettingsOutline /> },
     ];
     const { openNotiSuccess, openNotiError } = useAppContext();
+    const [openSettings, setOpenSettings] = useState(false);
+    const settings = useAppSelector(state => state.settings);
+    const { autoReplay, replayKey, timeBetweenReplays } = settings;
 
     useEffect(() => {
         FavQuizApis.getByQuizId(params.id).then(response => {
             setIsFavQuiz(response.data);
         });
     }, [params.id])
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === replayKey) {
+                for (let i = 0; i < Number(autoReplay) + 1; i++) {
+                    setTimeout(() => {
+                        playSegment();
+                    }, i * Number(timeBetweenReplays));
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [replayKey, autoReplay, timeBetweenReplays]);
 
     const handleAddFavQuiz = () => {
         const data = { user: tokenDecoded?._id, quiz: params.id } as IFavQuiz;
@@ -55,21 +82,27 @@ const MoreActions = ({ }) => {
             case "removeFavLession":
                 handleRemoveFavQuiz();
                 break;
+            case "settings":
+                setOpenSettings(true);
             default:
                 break;
         }
     }
 
     return (
-        <div className="flex items-centter gap-8">
-            {actions.map(action => {
-                return (
-                    <div key={action.key} className='cursor-pointer text-[20px]' onClick={() => handleClickItem(action.key)} title={action.label} aria-label={action.label}>
-                        {action.icon}
-                    </div>
-                )
-            })}
-        </div>
+        <>
+            <div className="flex items-centter gap-8">
+                {actions.map(action => {
+                    return (
+                        <div key={action.key} className='cursor-pointer text-[20px]' onClick={() => handleClickItem(action.key)} title={action.label} aria-label={action.label}>
+                            {action.icon}
+                        </div>
+                    )
+                })}
+            </div>
+
+            <SettingDialog open={openSettings} setOpen={setOpenSettings} />
+        </>
     )
 }
 

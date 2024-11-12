@@ -1,12 +1,15 @@
 "use client";
 
+import Loading from "@/components/pages/loading/Loading";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import React, { FC, useContext, useMemo } from "react";
+import React, { Dispatch, FC, SetStateAction, useContext, useMemo, useState } from "react";
 
 interface IAppContext {
     openNotiSuccess: (title?: string, description?: string) => void;
     openNotiError: (title?: string, description?: string) => void;
+    loading: boolean;
+    setLoading: Dispatch<SetStateAction<boolean>>
 }
 
 export const AppContext = React.createContext<IAppContext | undefined>(
@@ -28,7 +31,8 @@ interface AppContextProviderProps {
 }
 
 const AppContextProvider: FC<AppContextProviderProps> = ({ children }) => {
-    const { toast } = useToast()
+    const { toast } = useToast();
+    const [loading, setLoading] = useState(false);
 
     const openNotiSuccess = (title?: string, description?: string) => {
         toast({
@@ -54,7 +58,12 @@ const AppContextProvider: FC<AppContextProviderProps> = ({ children }) => {
     const values = useMemo(() => ({
         openNotiSuccess,
         openNotiError,
-    }), [])
+        loading, setLoading
+    }), [loading]);
+
+    if (loading) {
+        return <Loading />
+    }
 
     return (
         <AppContext.Provider value={values}>

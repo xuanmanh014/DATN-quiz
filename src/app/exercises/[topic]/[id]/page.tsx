@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { FaCheck, FaPause } from "react-icons/fa";
 import MoreActions from './components/MoreActions';
 import QuizComments from './components/Comments';
+import Loading from '@/components/pages/loading/Loading';
 
 const ExercisePage = () => {
     const params = useParams<{ id: string }>();
@@ -25,10 +26,12 @@ const ExercisePage = () => {
     const [isSegmentPlayed, setIsSegmentPlayed] = useState(false);
     const router = useRouter();
     const quizSegments = quiz?.segments;
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         QuizApis.getById(params.id).then(response => {
             setQuiz(response?.data);
+            setLoading(false);
         }).catch((error) => {
             const { response } = error;
             openNotiError("Get quiz", response?.data?.message);
@@ -74,7 +77,8 @@ const ExercisePage = () => {
         resetTimeAudio();
     }
 
-    const playSegment = (segment: ISegment) => {
+    const playSegment = () => {
+        const segment = quizSegments?.[segmentIndex] as ISegment;
         const { startTime, endTime } = segment;
         const audio = audioRef.current;
 
@@ -169,11 +173,17 @@ const ExercisePage = () => {
         )
     }
 
+    if (loading) {
+        return (
+            <Loading />
+        )
+    }
+
     return (
         <div>
             <div className="flex items-center justify-between">
                 <h1 className='text-[30px] font-bold'>{quiz?.quizName}</h1>
-                <MoreActions />
+                <MoreActions playSegment={playSegment} />
             </div>
             <Separator className='my-4' />
             <div className="grid grid-cols-4">
@@ -193,7 +203,7 @@ const ExercisePage = () => {
 
                     <div className='flex items-start gap-3 flex-col'>
                         {!isSegmentPlayed
-                            ? <Button variant={"outline"} onClick={() => playSegment(quizSegments?.[segmentIndex] as ISegment)}>
+                            ? <Button variant={"outline"} onClick={playSegment}>
                                 <FaPlay />
                             </Button>
                             : <Button variant={"outline"} onClick={pauseSegment}>

@@ -3,6 +3,7 @@
 import { QuizApis } from '@/apis/quiz/index.api';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { useAppContext } from '@/contexts/app';
 import { IGetDto } from '@/types/common/index.type';
 import { IQuiz } from '@/types/quiz/index.type';
 import { convertKebabToTitle } from '@/utils/utils';
@@ -19,11 +20,15 @@ const ExercisesByTopicPage = () => {
     const query = { search } as IGetDto;
     const router = useRouter();
     const pathname = usePathname();
+    const { setLoading, openNotiError } = useAppContext();
 
     const fetchData = () => {
         QuizApis.getByTopic(topic as string, query).then(response => {
             setQuizzes(response?.data);
-        })
+        }).catch((error) => {
+            const { response } = error;
+            openNotiError("Get quizzes by topic", response?.data?.message);
+        }).finally(() => setLoading(false));
     }
 
     useEffect(() => {

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster"
 import AppContextProvider from "@/contexts/app";
 import LayoutFooter from "@/layouts/footer";
 import OnlineTracker from "@/components/pages/web-socket/OnlineTracker";
+import StoreProvider from "./StoreProvider";
 
 export const metadata: Metadata = {
     title: "Quiz",
@@ -22,15 +23,17 @@ export default function RootLayout({
         <html lang="en">
             <body>
                 <Toaster />
-                <AppContextProvider>
-                    <LayoutHeader />
-                    <main>
-                        <div className="container m-auto py-[50px] h-full">
-                            {children}
-                        </div>
-                    </main>
-                    <LayoutFooter />
-                </AppContextProvider>
+                <StoreProvider>
+                    <AppContextProvider>
+                        <LayoutHeader />
+                        <main>
+                            <div className="container m-auto py-[50px] h-full">
+                                {children}
+                            </div>
+                        </main>
+                        <LayoutFooter />
+                    </AppContextProvider>
+                </StoreProvider>
                 <OnlineTracker />
             </body>
         </html>
