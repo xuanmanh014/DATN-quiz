@@ -1,4 +1,5 @@
 import { IQuiz } from "../quiz/index.type"
+import { ITopic } from "../topic/index.type"
 
 export interface ITokenDecoded {
     _id?: string
@@ -17,7 +18,7 @@ export interface IFile {
 }
 
 export interface IQuizByTopic {
-    topic?: string
+    topic?: ITopic
     quizzes?: IQuiz[]
 }
 

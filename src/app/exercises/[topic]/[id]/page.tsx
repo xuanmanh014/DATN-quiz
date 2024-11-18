@@ -67,6 +67,7 @@ const ExercisePage = () => {
             setAnswer(allAnswerRes?.[segmentIndex - 1]?.answer || "");
         }
         resetTimeAudio();
+        playSegment();
     }
 
     const handleNextSegment = () => {
@@ -75,10 +76,11 @@ const ExercisePage = () => {
             setAnswer(allAnswerRes?.[segmentIndex + 1]?.answer || "");
         }
         resetTimeAudio();
+        playSegment();
     }
 
     const playSegment = () => {
-        const segment = quizSegments?.[segmentIndex] as ISegment;
+        const segment = quizSegments?.[segmentIndex + 1] as ISegment;
         const { startTime, endTime } = segment;
         const audio = audioRef.current;
 
