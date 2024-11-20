@@ -27,6 +27,7 @@ const ExercisePage = () => {
     const router = useRouter();
     const quizSegments = quiz?.segments;
     const [loading, setLoading] = useState(true);
+    const [disabled, setDisabled] = useState(false);
 
     useEffect(() => {
         QuizApis.getById(params.id).then(response => {
@@ -65,22 +66,28 @@ const ExercisePage = () => {
         if (segmentIndex > 0) {
             setSegmentIndex(prev => prev - 1);
             setAnswer(allAnswerRes?.[segmentIndex - 1]?.answer || "");
+            playSegment(segmentIndex - 1);
         }
-        resetTimeAudio();
-        playSegment();
+        // resetTimeAudio();
     }
 
     const handleNextSegment = () => {
         if (segmentIndex <= Number(quiz?.segments?.length) - 1) {
             setSegmentIndex(prev => prev + 1);
             setAnswer(allAnswerRes?.[segmentIndex + 1]?.answer || "");
+            playSegment(segmentIndex + 1);
         }
-        resetTimeAudio();
-        playSegment();
+        // resetTimeAudio();
     }
 
-    const playSegment = () => {
-        const segment = quizSegments?.[segmentIndex + 1] as ISegment;
+    const playSegment = (segmentIndex: number) => {
+        const segment = quizSegments?.[segmentIndex] as ISegment;
+
+        if (!segment) {
+            console.error(`Segment at index ${segmentIndex} is undefined`);
+            return;
+        }
+
         const { startTime, endTime } = segment;
         const audio = audioRef.current;
 
@@ -88,13 +95,15 @@ const ExercisePage = () => {
             audio.currentTime = startTime;
             audio.play();
             setIsSegmentPlayed(true);
+            setDisabled(true);
 
             setTimeout(() => {
                 audio.pause();
                 setIsSegmentPlayed(false);
+                setDisabled(false);
             }, (endTime - startTime) * 1000);
         }
-    };
+    }
 
     const pauseSegment = () => {
         const audio = audioRef.current;
@@ -168,8 +177,7 @@ const ExercisePage = () => {
                 </div>
 
                 <div className='mt-4 text-[20px]'>
-                    <p>Correct answer:</p>
-                    <p>{quizSegments?.[segmentIndex].answer}</p>
+                    <p>Correct answer: <span className='text-[15px] text-green-600 font-medium'>{quizSegments?.[segmentIndex].answer}</span></p>
                 </div>
             </div>
         )
@@ -185,7 +193,7 @@ const ExercisePage = () => {
         <div>
             <div className="flex items-center justify-between">
                 <h1 className='text-[30px] font-bold'>{quiz?.quizName}</h1>
-                <MoreActions playSegment={playSegment} />
+                <MoreActions playSegment={() => playSegment(segmentIndex)} />
             </div>
             <Separator className='my-4' />
             <div className="grid grid-cols-4">
@@ -194,18 +202,18 @@ const ExercisePage = () => {
 
                     <div className="my-4"></div>
                     <div className="flex items-center gap-2 my-[30px]">
-                        <Button variant={"outline"} onClick={handlePrevSegment} disabled={segmentIndex === 0}>
+                        <Button variant={"outline"} onClick={handlePrevSegment} disabled={disabled || segmentIndex === 0}>
                             <FcPrevious className='cursor-pointer' />
                         </Button>
                         {segmentIndex + 1} / {quizSegments?.length}
-                        <Button variant={"outline"} onClick={handleNextSegment} disabled={segmentIndex === Number(quizSegments?.length) - 1}>
+                        <Button variant={"outline"} onClick={handleNextSegment} disabled={disabled || segmentIndex === Number(quizSegments?.length) - 1}>
                             <FcNext className='cursor-pointer' />
                         </Button>
                     </div>
 
                     <div className='flex items-start gap-3 flex-col'>
                         {!isSegmentPlayed
-                            ? <Button variant={"outline"} onClick={playSegment}>
+                            ? <Button variant={"outline"} onClick={() => playSegment(segmentIndex)}>
                                 <FaPlay />
                             </Button>
                             : <Button variant={"outline"} onClick={pauseSegment}>

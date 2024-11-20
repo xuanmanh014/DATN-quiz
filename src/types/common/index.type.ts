@@ -18,6 +18,11 @@ export interface IFile {
 }
 
 export interface IQuizByTopic {
+    topic?: string
+    quizzes?: IQuiz[]
+}
+
+export interface ITopicWithQuizzes {
     topic?: ITopic
     quizzes?: IQuiz[]
 }

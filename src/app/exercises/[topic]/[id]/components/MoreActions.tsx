@@ -21,7 +21,7 @@ const MoreActions: FC<IplaySegmentProps> = ({ playSegment = () => { } }) => {
     const params = useParams<{ id: string }>();
     const [favQuiz, setIsFavQuiz] = useState<IFavQuiz>();
     const actions = [
-        { label: favQuiz?._id ? "Remove from favourite lession list" : "Add to favourite lession list", key: favQuiz?._id ? "removeFavLession" : "addFavLession", icon: favQuiz?._id ? <FaHeart /> : <FiHeart /> },
+        { label: favQuiz?._id ? "Remove from favourite lession list" : "Add to favourite lession list", key: favQuiz?._id ? "removeFavLession" : "addFavLession", icon: favQuiz?._id ? <FaHeart className='text-red-400' /> : <FiHeart /> },
         { label: "Settings", key: "settings", icon: <IoSettingsOutline /> },
     ];
     const { openNotiSuccess, openNotiError } = useAppContext();

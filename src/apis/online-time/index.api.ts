@@ -1,5 +1,4 @@
 import Axios_instance from '@/axios/config';
-import axios from 'axios';
 
 const url = "/online-time";
 
@@ -9,4 +8,9 @@ export const OnlineTimeApis = {
 
         return response.data;
     },
+    getTotalOnlineTimeOfDay: async (userId?: string) => {
+        const response = await Axios_instance.get(`${url}/${userId}`);
+
+        return response.data || {};
+    }
 }

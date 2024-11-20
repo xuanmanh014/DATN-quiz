@@ -2,7 +2,7 @@ import { QuizApis } from '@/apis/quiz/index.api';
 import { TopicApis } from '@/apis/topic/index.api';
 import TopicCard from '@/components/pages/card/TopicCard';
 import { Separator } from '@/components/ui/separator';
-import { IQuizByTopic } from '@/types/common/index.type';
+import { ITopicWithQuizzes } from '@/types/common/index.type';
 import { IQuiz } from '@/types/quiz/index.type';
 import { ITopic } from '@/types/topic/index.type';
 import React from 'react'
@@ -22,7 +22,7 @@ const fetchTopic = async () => {
 const ExercisesPage = async () => {
     const quizzes: IQuiz[] = await fetchQuizzes();
     const topics: ITopic[] = await fetchTopic();
-    const quizzesByTopic: IQuizByTopic[] = topics.map(topic => {
+    const quizzesByTopic: ITopicWithQuizzes[] = topics.map(topic => {
         const topicQuizzes = quizzes.filter(quiz => quiz.quizTopic?._id === topic._id);
         return {
             topic: topic,

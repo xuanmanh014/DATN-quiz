@@ -43,7 +43,9 @@ export default async function Home() {
                     <p className="my-5">This website contains hundreds of dictation exercises to help English learners practice easily and improve quickly.</p>
 
                     <div className="flex items-center gap-4">
-                        <Button>Start now</Button>
+                        <Link href={"/exercises"}>
+                            <Button>Start now</Button>
+                        </Link>
                         <p>It's 100% FREE!</p>
                     </div>
                 </div>

@@ -1,11 +1,11 @@
-import { IQuizByTopic } from '@/types/common/index.type'
+import { ITopicWithQuizzes } from '@/types/common/index.type'
 import { ITopic } from '@/types/topic/index.type'
 import { quizOrQuizzes } from '@/utils/utils'
 import Link from 'next/link'
 import React, { FC } from 'react'
 
 interface ITopicCardProps {
-    topic: IQuizByTopic
+    topic: ITopicWithQuizzes
 }
 
 const TopicCard: FC<ITopicCardProps> = ({ topic }) => {
