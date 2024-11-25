@@ -3,6 +3,18 @@ import React from 'react'
 import thankYou from "../../../assets/thank-you.jpg"
 import Image from 'next/image'
 
+// 
+// 
+
+// 
+
+// 
+// 
+
+//     
+
+// 
+
 const SupportPage = () => {
     return (
         <div>
@@ -12,19 +24,17 @@ const SupportPage = () => {
 
             <div className="grid grid-cols-2 gap-6">
                 <div className="shadow-xl col-span-1 rounded-lg p-4 leading-[25px]">
-                    <p className='mb-4'>Hello friends! I'm Huy from Vietnam. I am the founder of dailydictation.com 🤗</p>
+                    <p className='mb-4'>Hello friends! I'm Manh, and I'm the 4th year student of Hanoi University of Mining and Geology. 🤗</p>
 
-                    <p>As a person who has used many different methods to learn English, I realized that dictation is an amazing way to improve my English.</p>
-                    <p>That's why I created this website to help all English learners practice easily and effectively.</p>
+                    <p>As someone who has explored countless methods to learn English, I’ve discovered that dictation is a truly powerful way to improve listening, writing, and comprehension skills.That’s exactly why I built this website – to help English learners practice easily and effectively.</p>
 
-                    <p className='my-4'>Building and maintaining a website takes time, money and effort. I need your help to keep the site running and to add more useful features.</p>
+                    <p className='my-4'>I believe there’s always room for improvement, and your feedback means a lot to me!</p>
 
-                    <p className='my-4'>If you can help me with money, awesome 🤩! You can send me a donation to my PayPal / Bank accounts (see below).</p>
+                    <p className='my-4'>If you have any suggestions to make this platform better or ideas for new features, feel free to share them with me.Your input will help improve the experience for everyone.</p>
 
-                    <p className='my-4'>Another great way to help me is to share this website with your friends. 😇</p>
+                    <p className='my-4'>Also, if you find this website helpful, please consider sharing it with your friends or anyone learning English.Together, we can grow a community of learners and make language learning even more enjoyable. 😇</p>
 
-                    <p className='my-4'>I sincerely appreciate your support!
-                        Thank you!!!!</p>
+                    <p className='my-4'>Thank you so much for your support! 🙏</p>
                 </div>
 
                 <div className="col-span-1">

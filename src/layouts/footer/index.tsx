@@ -23,7 +23,7 @@ const LayoutFooter = () => {
             </div>
 
             <div className="bg-gray-800 text-center py-3 text-white">
-                <p>© quizzes.com · since 2019</p>
+                <p>© quizzes.com · since 2024</p>
             </div>
         </footer>
     )

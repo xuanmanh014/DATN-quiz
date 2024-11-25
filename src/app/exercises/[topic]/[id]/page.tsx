@@ -230,7 +230,7 @@ const ExercisePage = () => {
                         />
 
                         <div className="flex items-center gap-4">
-                            {!allAnswerRes?.[segmentIndex]?.answer && <Button onClick={handleSubmitAnswer}>Check</Button>}
+                            {!allAnswerRes?.[segmentIndex]?.answer && <Button className="bg-blue-500" onClick={handleSubmitAnswer}>Check</Button>}
 
                             {allAnswerRes.length >= (segmentIndex + 1) && renderAnswerChecking(allAnswerRes?.[segmentIndex])}
                         </div>

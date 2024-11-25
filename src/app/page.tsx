@@ -44,7 +44,7 @@ export default async function Home() {
 
                     <div className="flex items-center gap-4">
                         <Link href={"/exercises"}>
-                            <Button>Start now</Button>
+                            <Button className="bg-blue-500">Start now</Button>
                         </Link>
                         <p>It's 100% FREE!</p>
                     </div>
