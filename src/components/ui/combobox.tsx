@@ -18,9 +18,10 @@ interface IComboboxProps {
     placeholder?: string
     defaultValue?: string
     onSelect?: (currentValue?: string) => void
+    className?: string
 }
 
-export const Combobox: React.FC<IComboboxProps> = ({ options = [], placeholder = "", defaultValue = options[0].value, onSelect = (currentValue) => { } }) => {
+export const Combobox: React.FC<IComboboxProps> = ({ options = [], placeholder = "", defaultValue = options[0]?.value, onSelect = (currentValue) => { }, className }) => {
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState(defaultValue);
 
@@ -31,7 +32,7 @@ export const Combobox: React.FC<IComboboxProps> = ({ options = [], placeholder =
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[200px] justify-between"
+                    className={`w-[200px] justify-between ${className}`}
                 >
                     {value
                         ? options.find((option) => option.value === value)?.label
@@ -39,7 +40,7 @@ export const Combobox: React.FC<IComboboxProps> = ({ options = [], placeholder =
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className={`w-[200px] p-0`}>
                 <Command>
                     <CommandList>
                         <CommandGroup>

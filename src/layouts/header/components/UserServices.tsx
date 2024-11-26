@@ -11,6 +11,7 @@ import { IoIosLogOut } from "react-icons/io";
 import { FaUser, FaHeart } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { RiLockPasswordFill } from "react-icons/ri";
+import { BsCardText } from "react-icons/bs";
 
 interface IUserServicesProps {
     userFullName?: string
@@ -21,11 +22,13 @@ const MenuKeys = {
     EDIT_PASSWORD: "/user/edit-password",
     USER_INFORMATION: "/user/profile",
     FAV_LESSIONS: "/user/favourite-lessions",
+    FLASH_CARD: "/user/flash-card",
 }
 
 const UserServices: FC<IUserServicesProps> = ({ userFullName = "" }) => {
     const router = useRouter();
     const menu = [
+        { key: MenuKeys.FLASH_CARD, label: "Flash cards", icon: <BsCardText className="mr-2 h-4 w-4" /> },
         { key: MenuKeys.FAV_LESSIONS, label: "Favourite lessions", icon: <FaHeart className="mr-2 h-4 w-4" /> },
         { key: MenuKeys.USER_INFORMATION, label: "Account information", icon: <FaUser className="mr-2 h-4 w-4" /> },
         { key: MenuKeys.EDIT_PASSWORD, label: "Change password", icon: <RiLockPasswordFill className="mr-2 h-4 w-4" /> },

@@ -1,6 +1,5 @@
 "use client";
 
-import Loading from "@/components/pages/loading/Loading";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import React, { Dispatch, FC, SetStateAction, useContext, useMemo, useState } from "react";
@@ -63,11 +62,7 @@ const AppContextProvider: FC<AppContextProviderProps> = ({ children }) => {
         openNotiSuccess,
         openNotiError,
         loading, setLoading
-    }), [loading]);
-
-    if (loading) {
-        return <Loading />
-    }
+    }), []);
 
     return (
         <AppContext.Provider value={values}>

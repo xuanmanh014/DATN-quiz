@@ -11,6 +11,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { useAppContext } from '@/contexts/app';
 import SettingDialog from '@/components/pages/setting/Dialog';
 import { useAppSelector } from '@/redux/store';
+import CreateFlashCard from '../../../../../components/pages/flash-card/CreateFlashCard';
 
 interface IplaySegmentProps {
     playSegment: () => void
@@ -91,7 +92,7 @@ const MoreActions: FC<IplaySegmentProps> = ({ playSegment = () => { } }) => {
 
     return (
         <>
-            <div className="flex items-centter gap-8">
+            <div className="flex items-center gap-8">
                 {actions.map(action => {
                     return (
                         <div key={action.key} className='cursor-pointer text-[20px]' onClick={() => handleClickItem(action.key)} title={action.label} aria-label={action.label}>
@@ -99,6 +100,7 @@ const MoreActions: FC<IplaySegmentProps> = ({ playSegment = () => { } }) => {
                         </div>
                     )
                 })}
+                <CreateFlashCard />
             </div>
 
             <SettingDialog open={openSettings} setOpen={setOpenSettings} />

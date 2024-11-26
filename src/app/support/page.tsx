@@ -3,18 +3,6 @@ import React from 'react'
 import thankYou from "../../../assets/thank-you.jpg"
 import Image from 'next/image'
 
-// 
-// 
-
-// 
-
-// 
-// 
-
-//     
-
-// 
-
 const SupportPage = () => {
     return (
         <div>
