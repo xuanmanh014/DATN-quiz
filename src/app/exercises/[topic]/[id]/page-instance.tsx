@@ -14,32 +14,20 @@ import { FaCheck, FaPause } from "react-icons/fa";
 import MoreActions from './components/MoreActions';
 import QuizComments from './components/Comments';
 import Loading from '@/components/pages/loading/Loading';
-import { CiWarning } from "react-icons/ci";
-import { FaEyeSlash, FaRegEye } from "react-icons/fa";
 
-const ExercisePage = () => {
+const ExercisePageInstance = () => {
     const params = useParams<{ id: string }>();
     const [quiz, setQuiz] = useState<IQuiz>();
     const { openNotiError } = useAppContext();
     const audioRef = useRef<HTMLAudioElement>(null);
     const [answer, setAnswer] = useState("");
     const [segmentIndex, setSegmentIndex] = useState(0);
-    const [allAnswerRes, setAllAnswerRes] = useState<IAnswerResponse[]>([{
-        isCorrect: false,
-        isSkip: false,
-        answer: "",
-        success: false,
-    }]);
+    const [allAnswerRes, setAllAnswerRes] = useState<IAnswerResponse[]>([]);
     const [isSegmentPlayed, setIsSegmentPlayed] = useState(false);
     const router = useRouter();
     const quizSegments = quiz?.segments;
     const [loading, setLoading] = useState(true);
     const [disabled, setDisabled] = useState(false);
-    const [showSentence, setShowSentence] = useState(false);
-    const [checkingValue, setCheckingValue] = useState("");
-    const [showAllWords, setShowAllWords] = useState(false);
-    const [isSkip, setIsSkip] = useState(false);
-    const [isMatchAll, setIsMatchAll] = useState(false);
 
     useEffect(() => {
         QuizApis.getById(params.id).then(response => {
@@ -51,14 +39,36 @@ const ExercisePage = () => {
         });
     }, [params.id]);
 
+    const handleSubmitAnswer = () => {
+        if (!answer) {
+            openNotiError("Submit answer", "Please type your answer first!");
+            return;
+        }
+
+        QuizApis.checkSegmentAnswer(params.id, segmentIndex, answer).then((response) => {
+            setAllAnswerRes(prev => [...prev, { ...response, answer }]);
+        }).catch((error) => {
+            const { response } = error;
+            openNotiError("Answer", response?.data?.message);
+        });
+    };
+
+    const resetTimeAudio = () => {
+        const audio = audioRef.current;
+
+        if (audio) {
+            audio.currentTime = 0;
+            audio.pause();
+        }
+    }
 
     const handlePrevSegment = () => {
         if (segmentIndex > 0) {
             setSegmentIndex(prev => prev - 1);
             setAnswer(allAnswerRes?.[segmentIndex - 1]?.answer || "");
             playSegment(segmentIndex - 1);
-            setIsMatchAll(false);
         }
+        // resetTimeAudio();
     }
 
     const handleNextSegment = () => {
@@ -66,20 +76,8 @@ const ExercisePage = () => {
             setSegmentIndex(prev => prev + 1);
             setAnswer(allAnswerRes?.[segmentIndex + 1]?.answer || "");
             playSegment(segmentIndex + 1);
-            setAllAnswerRes(prev => {
-                if (prev.length - segmentIndex > 1) {
-                    return prev;
-                }
-
-                return [...prev, {
-                    isCorrect: false,
-                    isSkip: false,
-                    answer: "",
-                    success: false,
-                }];
-            });
-            setIsMatchAll(false);
         }
+        // resetTimeAudio();
     }
 
     const playSegment = (segmentIndex: number) => {
@@ -118,18 +116,24 @@ const ExercisePage = () => {
 
     const handleSetAnswer = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setAnswer(event.target.value);
-        setShowSentence(false);
     }
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            handleCheck();
+            handleSubmitAnswer();
         }
     };
 
+    const handleDoneQuiz = () => {
+        if (allAnswerRes.length === quizSegments?.length) {
+            router.push("/done-quiz");
+        } else {
+            handleNextSegment();
+        }
+    }
+
     const handleSkipSegment = () => {
-        setAnswer(quizSegments?.[segmentIndex].answer || "");
         setAllAnswerRes(prev => {
             const data = {
                 isCorrect: true,
@@ -142,99 +146,42 @@ const ExercisePage = () => {
 
             return prev;
         });
-        const segmentAnswer = quizSegments?.[segmentIndex].answer || "";
-        setIsSkip(true);
-        setCheckingValue(segmentAnswer);
+        setAnswer(quizSegments?.[segmentIndex].answer || "");
     }
 
-    const handleDoneQuiz = () => {
-        if (allAnswerRes.length === quizSegments?.length) {
-            router.push("/done-quiz");
-        } else {
-            setShowAllWords(false);
-            handleNextSegment();
-            setShowSentence(false);
-            setIsSkip(false);
-        }
-    }
-
-    const handleCheck = () => {
-        if (!showSentence) {
-            setShowSentence(true);
-        }
-
-        const inputWords = answer.trim().split(" ");
-        const segmentAnswer = quizSegments?.[segmentIndex].answer || "";
-        const segmentAnswerWords = segmentAnswer?.split(" ");
-
-        if (inputWords.length === segmentAnswerWords.length) {
-            const allWordsMatch = inputWords.every((word, index) => {
-                return word.toLowerCase() === segmentAnswerWords[index]?.toLowerCase();
-            });
-
-            if (allWordsMatch) {
-                setAnswer(segmentAnswer);
-                setShowSentence(false);
-                setCheckingValue(segmentAnswer);
-                setAllAnswerRes(prev => {
-                    const data = {
-                        isCorrect: true,
-                        isSkip: false,
-                        answer: quizSegments?.[segmentIndex].answer,
-                        success: true,
-                    }
-
-                    Object.assign(prev?.[segmentIndex], data);
-
-                    return prev;
-                });
-                setIsMatchAll(true);
-            }
-        }
-
-        setCheckingValue(answer.trim());
-    };
-
-    const renderSentence = () => {
-        const inputWords = checkingValue.split(" ");
-        const segmentAnswer = quizSegments?.[segmentIndex].answer || "";
-        const segmentAnswerWords = segmentAnswer?.split(" ");
-
-        return segmentAnswerWords.map((word, index) => {
-            const matchedWords = inputWords.filter((word, index) => {
-                return word.toLowerCase() === segmentAnswerWords[index]?.toLowerCase();
-            });
-
-            let lengthCheck;
-
-            if (matchedWords[index] === segmentAnswerWords[index]) {
-                lengthCheck = matchedWords.length;
-            } else {
-                lengthCheck = matchedWords.length + 1;
-            }
-
-            if (!checkingValue || index >= lengthCheck) {
-                return !showAllWords
-                    ? <span key={index}>{"*".repeat(word.length)} </span>
-                    : <span key={index}>{word} </span>;
-            }
-
-            let isLatestWord = index === matchedWords.length;
-
+    const renderAnswerChecking = (resAnswer: IAnswerResponse) => {
+        if (resAnswer?.isCorrect) {
             return (
-                <span key={index}>
-                    <span
-                        style={{
-                            color: isLatestWord ? "green" : "black",
-                            fontWeight: isLatestWord ? "bold" : "normal",
-                        }}
+                <div className='text-green-500 text-[20px] font-bold flex items-center gap-3'>
+                    <div className='flex items-center gap-3'>
+                        <Button onClick={handleDoneQuiz}>Next</Button>
+                    </div>
+                    {!resAnswer.isSkip && <>
+                        <FaCheck />
+                        <p>Correct!</p>
+                    </>}
+                </div>
+            )
+        }
+
+        return (
+            <div>
+                <div className="flex items-center gap-4">
+                    <Button
+                        variant={"secondary"}
+                        onClick={handleSkipSegment}
                     >
-                        {word}
-                    </span>{" "}
-                </span>
-            );
-        });
-    };
+                        Skip
+                    </Button>
+                    <p className='text-red-500 text-[20px] font-bold '>Incorrect!</p>
+                </div>
+
+                <div className='mt-4 text-[20px]'>
+                    <p>Correct answer: <span className='text-[15px] text-green-600 font-medium'>{quizSegments?.[segmentIndex].answer}</span></p>
+                </div>
+            </div>
+        )
+    }
 
     if (loading) {
         return (
@@ -282,29 +229,10 @@ const ExercisePage = () => {
                             className='w-[400px]'
                         />
 
-                        <div className="flex items-center justify-between w-[400px]">
-                            {showSentence && checkingValue !== quizSegments?.[segmentIndex].answer
-                                && <div>
-                                    <div className='flex items-center gap-2 text-[20px] mb-2'><CiWarning className='text-yellow-600 text-[30px] font-medium' />Incorrect</div>
-                                    {renderSentence()}
-                                </div>
-                            }
+                        <div className="flex items-center gap-4">
+                            {!allAnswerRes?.[segmentIndex]?.answer && <Button className="bg-blue-500" onClick={handleSubmitAnswer}>Check</Button>}
 
-                            {
-                                isMatchAll && <div className='flex items-center gap-2 text-[20px] text-green-600 font-medium'><FaCheck />You are correct!</div>
-                            }
-
-                            {(isSkip || checkingValue === quizSegments?.[segmentIndex].answer || answer === quizSegments?.[segmentIndex].answer) ? <Button className='bg-green-600' onClick={handleDoneQuiz}>Next</Button> :
-                                <div className="flex items-center gap-4">
-                                    {!showSentence && <Button className="bg-blue-500" onClick={handleCheck}>Check</Button>}
-                                    {!isSkip && <div className='flex items-center gap-2'>
-                                        {showSentence && <>
-                                            {showAllWords ? <FaEyeSlash className='cursor-pointer text-[18px]' onClick={() => setShowAllWords(false)} /> :
-                                                <FaRegEye className='cursor-pointer text-[18px]' onClick={() => setShowAllWords(true)} />}
-                                        </>}
-                                        <Button variant={'outline'} onClick={handleSkipSegment}>Skip</Button>
-                                    </div>}
-                                </div>}
+                            {allAnswerRes.length >= (segmentIndex + 1) && renderAnswerChecking(allAnswerRes?.[segmentIndex])}
                         </div>
                     </div>
                 </div>
@@ -317,4 +245,4 @@ const ExercisePage = () => {
     )
 }
 
-export default ExercisePage
+export default ExercisePageInstance
