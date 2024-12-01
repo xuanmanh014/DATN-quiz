@@ -17,6 +17,7 @@ const LayoutHeader = () => {
     const hasMounted = useHasMounted();
     const navs = [
         { label: "All exercises", key: "/exercises" },
+        { label: "Learn video", key: "/learn-video" },
         { label: "Top users", key: "/top-users" },
         // { label: "English expressions", key: "/expressions" },
         // { label: "English pronounciation", key: "/english-pronunciation" },
