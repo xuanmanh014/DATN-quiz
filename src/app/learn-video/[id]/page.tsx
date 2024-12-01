@@ -76,7 +76,7 @@ const LearnVideoPage: React.FC = () => {
                                     cursor: "pointer",
                                 }}
                             >
-                                {`00:${String(section.end - section.start).padStart(2, "0")}`}
+                                {`00:${String(section.start).padStart(2, "0")}`}
                             </Button>
 
                             <div className="w-fit">
